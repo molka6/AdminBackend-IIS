@@ -112,7 +112,6 @@ class ApiController extends AbstractController
  {
      return $this->setStatusCode(422)->respondWithErrors($message);
  }
- 
  /**
   * Returns a 404 Not Found
   *
@@ -125,5 +124,6 @@ class ApiController extends AbstractController
  {
      return $this->setStatusCode(201)->respond($data);
  }
+ 
  
 }

@@ -29,7 +29,7 @@ class EquipeController extends ApiController
     }
 
     /** 
-    * @Route("/createpersonne", name="createpersonne")
+    * @Route("/createpersonne", name="createpersonne" , methods={"POST"}  )
     */
     public function createEquipe(Request $request ,EquipeRepository  $equipeRepository,EntityManagerInterface $em)
     {

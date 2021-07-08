@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\OffreEmploi;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 /**
  * @method OffreEmploi|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +16,16 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class OffreEmploiRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface  $em)
     {
-        parent::__construct($registry, OffreEmploi::class);
+
+        $this->em =  $em;
+        parent::__construct($registry, OffreEmploi::class  );
+       
+
+
     }
+
 
     // /**
     //  * @return OffreEmploi[] Returns an array of OffreEmploi objects
@@ -47,4 +55,44 @@ class OffreEmploiRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+
+    public function transformAll()
+    {
+        $offres = $this->findAll();
+        $offreArray = [];
+        foreach ($offres as $offre) {
+            $offreArray[] = $this->transform($offre);
+        }
+        return $offreArray;
+    
+    }
+
+    
+    public function transform(OffreEmploi $offre)
+    {
+        return [
+                'id'    => (int) $offre->getId(),
+                'title' => (string) $offre->getTitre(),
+                'description' => (string) $offre->getDescription(),
+                'DateAjout' => (string) $offre->getDateAjout(),               
+        ];
+    }
+
+    public function updateOffre(OffreEmploi $offre)
+    {
+        $this->em->persist($offre);
+        $this->em->flush();
+
+        return $offre;
+    }
+
+
+    public function removeoffre(OffreEmploi $offre)
+    {
+        $this->em->remove($offre);
+        $this->em->flush();
+    }
+    
 }
