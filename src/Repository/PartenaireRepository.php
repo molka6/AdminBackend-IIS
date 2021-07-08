@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Partenaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Doctrine\ORM\EntityManagerInterface;
 /**
  * @method Partenaire|null find($id, $lockMode = null, $lockVersion = null)
  * @method Partenaire|null findOneBy(array $criteria, array $orderBy = null)
@@ -14,11 +14,18 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PartenaireRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Partenaire::class);
-    }
+   
 
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface  $em)
+    {
+
+        $this->em =  $em;
+        parent::__construct($registry, Partenaire::class  );
+       
+
+
+    }
     // /**
     //  * @return Partenaire[] Returns an array of Partenaire objects
     //  */
@@ -47,4 +54,47 @@ class PartenaireRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+
+    public function transformAll()
+    {
+        $partenaires= $this->findAll();
+        $partenaireArray = [];
+        foreach ($partenaires as $partenaire) {
+            $partenaireArray[] = $this->transform($partenaire);
+        }
+        return $partenaireArray;
+    
+    }
+
+    
+ 
+       
+    public function transform(Partenaire  $partenaire)
+    {
+        return [
+                'id'    => (int) $partenaire->getId(),
+                'nom' => (string) $partenaire->getNom(),
+                'logo' => (string) $partenaire-> getLogo(),
+                            
+        ];
+    }
+
+   
+
+    public function updatePartenaire(Partenaire  $partenaire)
+    {
+        $this->em->persist($partenaire);
+        $this->em->flush();
+
+        return $partenaire;
+    }
+
+    public function removePartenaire(Partenaire  $partenaire)
+    {
+        $this->em->remove($partenaire);
+        $this->em->flush();
+    }
+
 }

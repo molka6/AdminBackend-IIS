@@ -47,4 +47,26 @@ class ServiceRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    public function transformAll()
+    {
+        $services = $this->findAll();
+        $serviceArray = [];
+        foreach ( $services  as  $service ) {
+            $serviceArray [] = $this->transform( $service);
+        }
+        return  $serviceArray ;
+    
+    }
+
+    
+    public function transform(Service $services)
+    {
+        return [
+                'id'    => (int)$services->getId(),
+                'title' => (string) $services->getTitle(),
+                'description' => (string) $services->getDescription(),                 
+        ];
+    }
 }

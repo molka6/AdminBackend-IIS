@@ -72,4 +72,17 @@ class OffreEmploi
 
         return $this;
     }
+
+
+    
+    public function toArray()
+        {
+            return [
+                'id' => $this->getId(),
+                'title' => $this->getTitre(),
+                'Description' => $this->getDescription(),
+                'DateAjout' => $this->getDateAjout(),
+                
+            ];
+        }
 }

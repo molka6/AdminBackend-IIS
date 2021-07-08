@@ -55,4 +55,14 @@ class Partenaire
 
         return $this;
     }
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'nom' => $this->getNom(),
+            'logo' => $this->getLogo(),
+           
+            
+        ];
+    }
 }
