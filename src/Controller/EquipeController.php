@@ -20,7 +20,7 @@ class EquipeController extends ApiController
       
     }
     /**
-     * @Route("personne", name="personne")
+     * @Route("api/personne", name="personne")
      */
     public function index()
     {

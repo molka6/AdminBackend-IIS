@@ -18,13 +18,38 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator  
+
+
+
         main:
-        
+            # anonymous: true
             lazy: true
             provider: app_user_provider
+            form_login: 
+                  check_path: app_login
+                  default_target_path: app_login
+            entry_point: form_login
+            
+            # nchouf bih 3ml mot de pass et email s7a7 ou nn 
+            guard:
+                # entry_point: App\Security\BackendAuthenticator
+                authenticators:
+                   - App\Security\BackendAuthenticator
+    
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -32,8 +57,13 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/admin,       roles: [ROLE_USER ,ROLE_ADMIN] }
+
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+
