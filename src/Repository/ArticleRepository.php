@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -13,10 +14,15 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ArticleRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
+{ 
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface  $em)
     {
-        parent::__construct($registry, Article::class);
+
+        $this->em =  $em;
+        parent::__construct($registry, Article::class  );
+       
+
+
     }
 
     // /**
@@ -47,4 +53,35 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function transformAll()
+    {
+        $Articles= $this->findAll();
+        $ArticleArray = [];
+        foreach ($Articles as $Article) {
+            $ArticleArray[] = $this->transform($Article);
+        }
+        return $ArticleArray;
+    
+    }
+
+    
+    public function transform(Article  $article)
+    {
+        return [
+                'id'    => (int) $article->getId(),
+                'title' => (string) $article->getTitle(),
+                'description' => (string) $article->getDescription(),
+                'DateAjout' => (string)$article->getDateAjout(),
+                'image'=>(string) $article->getImage(),               
+        ];
+    }
+
+    public function updateArticle(Article $Article)
+    {
+        $this->em->persist($Article);
+        $this->em->flush();
+
+        return $offre;
+    }
 }

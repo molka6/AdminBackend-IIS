@@ -89,4 +89,17 @@ class Article
 
         return $this;
     }
+
+     
+    public function toArray()
+        {
+            return [
+                'id' => $this->getId(),
+                'title' => $this->getTitle(),
+                'Description' => $this->getDescription(),
+                'DateAjout' => $this->getDateAjout(),
+                'image' =>  $this->getImage(), 
+                
+            ];
+        }
 }
