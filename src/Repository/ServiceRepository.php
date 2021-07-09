@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Service;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Service|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +15,17 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ServiceRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+   
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface  $em)
     {
-        parent::__construct($registry, Service::class);
+
+        $this->em =  $em;
+        parent::__construct($registry, Service::class  );
+       
+
+
     }
+
 
     // /**
     //  * @return Service[] Returns an array of Service objects
@@ -68,5 +76,16 @@ class ServiceRepository extends ServiceEntityRepository
                 'title' => (string) $services->getTitle(),
                 'description' => (string) $services->getDescription(),                 
         ];
+    }
+
+
+   
+
+    public function  updateService(Service  $service)
+    {
+        $this->em->persist($service);
+        $this->em->flush();
+
+        return $service;
     }
 }
