@@ -89,4 +89,16 @@ class Equipe
 
         return $this;
     }
+    public function toArray()
+        {
+            return [
+                'id' => $this->getId(),
+                'nom' => $this->getNom(),
+                'prenom' => $this->getPrenom(),
+                'role' => $this->getRole(),
+                'Email' => $this->getEmail(),
+                
+            ];
+        }
+
 }
