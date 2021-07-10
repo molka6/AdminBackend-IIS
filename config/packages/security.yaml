@@ -6,6 +6,10 @@ security:
     password_hashers:
         App\Entity\User:
             algorithm: auto
+        App\Entity\Membre:
+            algorithm: auto
+
+
 
 
             
@@ -15,8 +19,10 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\User
+                class: App\Entity\Membre
                 property: email
+        # used to reload user from session & other features (e.g. switch_user)
+        # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         login:
             pattern: ^/api/login
