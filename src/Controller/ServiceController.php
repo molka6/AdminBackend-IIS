@@ -21,6 +21,8 @@ class ServiceController extends ApiController
 //     }
 
 
+
+
 public function __construct(ServiceRepository $repository ,  EntityManagerInterface  $em )
 {
     $this-> repository= $repository;
@@ -121,5 +123,17 @@ public function __construct(ServiceRepository $repository ,  EntityManagerInterf
 
         }
 
+
+    /**
+     * @Route("/Service/{id}", name="deleteService", methods={"DELETE"})
+     */
+    public function deleteService($id): JsonResponse
+    {
+        $Service = $this->repository->findOneBy(['id' => $id]);
+         $this->repository->removeService($Service);
+
+         return new JsonResponse(['status' => 'Service deleted']);
+    }
+    
 
 }
