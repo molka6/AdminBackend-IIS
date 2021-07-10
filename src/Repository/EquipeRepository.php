@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Equipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Equipe|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,8 +15,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EquipeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry , EntityManagerInterface  $em)
     {
+        $this->em =  $em;
         parent::__construct($registry, Equipe::class);
     }
 
@@ -68,6 +70,19 @@ class EquipeRepository extends ServiceEntityRepository
         return $articleArray;
     }
 
+    public function updateOffre(Equipe $offre)
+    {
+        $this->em->persist($offre);
+        $this->em->flush();
+        return $offre;
+    }
+
+
+    public function removeoffre(Equipe $offre)
+    {
+        $this->em->remove($offre);
+        $this->em->flush();
+    }
 
 
 
