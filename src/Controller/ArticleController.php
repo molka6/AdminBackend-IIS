@@ -37,7 +37,7 @@ class ArticleController extends ApiController
     }
 
      /**
-    * @Route("/createArticle",name="createArticle" , methods={"POST"})
+    * @Route("/createArticle",name="createArticle" , methods="POST")
     */
     
     public function createArticle( Request $request , ArticleRepository $ArticleRepository, EntityManagerInterface $em)

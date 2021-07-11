@@ -96,7 +96,7 @@ class Article
             return [
                 'id' => $this->getId(),
                 'title' => $this->getTitle(),
-                'Description' => $this->getDescription(),
+                'description' => $this->getDescription(),
                 'DateAjout' => $this->getDateAjout(),
                 'image' =>  $this->getImage(), 
                 
