@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\OffreEmploiRepository;
 use App\Repository\ArticleRepository ; 
 use App\Entity\Article; 
 
@@ -23,6 +22,17 @@ class ArticleController extends ApiController
     // }
 
 
+
+
+    
+public function __construct(ArticleRepository $repository ,  EntityManagerInterface  $em )
+{
+    $this-> repository= $repository;
+    $this->em =  $em;
+
+     
+
+}
     /**
      * 
      * @Route("Articles", name="Articles"  ,methods={"GET"} )
@@ -109,11 +119,36 @@ class ArticleController extends ApiController
         $Article->setDateAjout($request->get('DateAjout')); 
         $Article->setImage($request->get('image'));  
 
-       $updatedArticle= $this->repository->updateArticle( $offreArticle);
+       $updatedArticle= $this->repository->updateArticle($Article);
        return new JsonResponse($updatedArticle->toArray(), Response::HTTP_OK);
 
       
     }
+
+     /**
+    * @Route("/getArticle/{id}", name="getArticle", methods="GET")
+    */
+
+    public function getArticle ($id): JsonResponse
+
+        {
+             
+        $Article= $this->repository->findOneBy(['id' => $id]);
+        return new JsonResponse($Article->toArray(), Response::HTTP_OK);
+
+        }
+
+    /**
+     * @Route("/Article/{id}", name="deleteArticle", methods={"DELETE"})
+     */
+    public function deleteArticle($id): JsonResponse
+    {
+        $Article = $this->repository->findOneBy(['id' => $id]);
+         $this->repository->removeArticle($Article);
+
+         return new JsonResponse(['status' => 'Article deleted']);
+    }
+    
 
 
 }

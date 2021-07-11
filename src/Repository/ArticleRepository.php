@@ -82,6 +82,14 @@ class ArticleRepository extends ServiceEntityRepository
         $this->em->persist($Article);
         $this->em->flush();
 
-        return $offre;
+        return $Article;
     }
+
+
+    public function removeArticle(Article $Article)
+    {
+        $this->em->remove($Article);
+        $this->em->flush();
+    }
+
 }

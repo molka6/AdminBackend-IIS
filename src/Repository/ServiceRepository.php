@@ -88,4 +88,12 @@ class ServiceRepository extends ServiceEntityRepository
 
         return $service;
     }
+
+
+    public function removeService(Service  $service)
+    {
+        $this->em->remove($service);
+        $this->em->flush();
+    }
 }
+
