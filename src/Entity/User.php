@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -43,10 +42,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * 
      * 
      */
-    private $PlainPassword ; 
+    private $PlainPassword ;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image; 
 
 
 
+
+
+
+    
     /**
      * @return mixed 
      */
@@ -162,6 +170,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
     }
 
 

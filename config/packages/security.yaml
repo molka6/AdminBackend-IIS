@@ -2,33 +2,34 @@ security:
     # https://symfony.com/doc/current/security/experimental_authenticators.html
     enable_authenticator_manager: true
 
+    encoders:  
+        App\Entity\User:
+            algorithm: auto
+
 
     password_hashers:
         App\Entity\User:
             algorithm: auto
         App\Entity\Membre:
-            algorithm: auto
-
-
-
-
-            
+            algorithm: auto  
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\Membre
+                class: App\Entity\User
                 property: email
         # used to reload user from session & other features (e.g. switch_user)
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
+
         login:
             pattern: ^/api/login
             stateless: true
             json_login:
                 check_path: /api/login
+                require_previous_session: false
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
@@ -39,37 +40,24 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator  
 
-
-
-        main:
-            # anonymous: true
-            lazy: true
-            provider: app_user_provider
-            form_login: 
-                  check_path: app_login
-                  login_path: app_login
-            entry_point: form_login
-            
-            # nchouf bih 3ml mot de pass et email s7a7 ou nn 
-            guard:
-                # entry_point: App\Security\BackendAuthenticator
-                authenticators:
-                   - App\Security\BackendAuthenticator
-    
-
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
     access_control:
-        # - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
 
-        - { path: ^/admin,       roles: [ROLE_ADMIN] }
 
 
-        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
