@@ -149,6 +149,10 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
          return new JsonResponse(['status' => 'Article deleted']);
     }
     
+  
+   
+   
 
+    
 
 }
