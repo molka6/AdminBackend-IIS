@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Entity\Avis;
+use App\Repository\AvisRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -73,7 +75,9 @@ class ArticleRepository extends ServiceEntityRepository
                 'title' => (string) $article->getTitle(),
                 'description' => (string) $article->getDescription(),
                 'DateAjout' => (string)$article->getDateAjout(),
-                'image'=>(string) $article->getImage(),               
+                'image'=>(string) $article->getImage(),
+
+                           
         ];
     }
 
@@ -92,4 +96,6 @@ class ArticleRepository extends ServiceEntityRepository
         $this->em->flush();
     }
 
+  
+   
 }

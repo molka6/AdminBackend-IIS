@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Avis;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Avis|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,8 +15,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AvisRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry ,EntityManagerInterface  $em )
     {
+        $this->em =  $em;
         parent::__construct($registry, Avis::class);
     }
 
@@ -47,4 +49,40 @@ class AvisRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+
+
+    public function findAvisOfArticle(int $articleId): ?array
+    {
+       
+        return $this->createQueryBuilder('a')
+        ->where('a.article= :val')
+        ->setParameter('val', $articleId )
+        ->getQuery()
+        ->getResult();
+       
+      
+
+    }
+
+    public function transform(Avis $avis)
+    {
+        return [
+                'id'    => (int) $avis->getId(),
+                'nom' => (string) $avis-> getNom(),
+                'prenom' => (string) $avis->getPrenom(),
+                'contenu'=> (string) $avis-> getContenu(),
+                'date'=> (string) $avis->getDate(),
+                
+        ];
+    }
+
+    public function removeCommentaire(  Avis $avis)
+    {
+        $this->em->remove($avis);
+        $this->em->flush();
+    }
+
+    
 }
