@@ -91,33 +91,35 @@ class PartenaireController extends ApiController
     }
 
     /**
-    * @Route("/UpdatePartenaire/{id}", name="UpdatePartenaire", methods="PUT")
+    * @Route("/UpdatePartenaire/{id}", name="UpdatePartenaire", methods="POST")
     */
-    public function UpdatePartenaire($id , Request $request ) : JsonResponse
+    public function UpdatePartenaire($id , Request $request  ,EntityManagerInterface $em) : JsonResponse
     {
-        $request = $this->transformJsonBody($request);
+        $request->setMethod('PUT');
+        $Partenaire = $this->repository->findOneBy(['id' => $id]);
+        $uploadedImage = $request->files->get('logo');
+         /**
+         * @var UploadedFile $image
+         */
+        $image = $uploadedImage;
        
-        $partenaire = $this->repository->findOneBy(['id' => $id]);
-        if (! $partenaire) {
-            return new JsonResponse(['status' => 'offre not Found ']);
-        }
+         $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+         $image->move($this->getParameter('image_directory'), $imageName);
+         $Partenaire-> setNom($request->get('nom'));
+        $Partenaire->setLogo($imageName);
+        $em->persist($Partenaire);
+        $em->flush();
+        $response = array(
 
-        if (! $request) {
-            return $this->respondValidationError('Please provide a valid request!');
-        }
-        // validate the title
-        if (! $request->get("nom")) {
-            return $this->respondValidationError('Please provide a nom !');
-        }
-        if (! $request->get("logo")) {
-            return $this->respondValidationError('Please provide a logo!');
-        }
-        $partenaire-> setNom($request->get('nom'));
-        $partenaire->setLogo($request->get('logo'));
-       $updatedPartenaire= $this->repository->updatePartenaire(  $partenaire);
-       return new JsonResponse($updatedPartenaire->toArray(), Response::HTTP_OK);
+            'code' => 0,
+            'message' => 'Partner Updated!',
+            'errors' => null,
+            'result' => null
 
-      
+        );
+        return new JsonResponse($response, Response::HTTP_CREATED);
+
+  
     }
 
     
@@ -169,6 +171,18 @@ class PartenaireController extends ApiController
 
         return new JsonResponse($response,200);
 
+    }
+
+
+    /**
+     * @Route("/PartenaireLogo/{id}", name="deletePartenaireLogo", methods={"Get"})
+     */
+    public function deletelogo($id): JsonResponse
+    {
+        $logo = $this->getDoctrine()
+        ->getRepository(Partenaire::class)
+        ->deleteOneLoGO($id);
+        return new JsonResponse(['status' => 'logo deleted']);
     }
 
 }

@@ -4,8 +4,12 @@ namespace App\Entity;
 
 use App\Repository\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use ApiPlatform\Core\Annotation\ApiResource;
 /**
+ *   @ApiResource(
+ *     normalizationContext={"groups"={"service:read"}},
+ *     denormalizationContext={"groups"={"service:write"}}
+ * )
  * @ORM\Entity(repositoryClass=ServiceRepository::class)
  */
 class Service

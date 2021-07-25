@@ -97,4 +97,21 @@ class PartenaireRepository extends ServiceEntityRepository
         $this->em->flush();
     }
 
+
+    public function deleteOneLoGO(int $PartenaireId): ?int
+    {
+       
+        return $this->em->createQueryBuilder()
+        ->update(Partenaire::class, 'p')
+        ->set('p.logo', ':Null')
+        ->where('p.id= :val')
+        ->setParameter('val', $PartenaireId)
+        ->setParameter('Null', '')
+        ->getQuery()
+        ->getResult();
+        
+       
+      
+
+    }
 }
