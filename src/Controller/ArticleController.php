@@ -79,7 +79,8 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
 
         $em->persist( $Article);
         $em->flush();
-        return $this->respondCreated($ArticleRepository->transform($Article));
+    
+        return $this->respondCreated($ArticleRepository->transform($Article) , Response::HTTP_OK);
       
       
     }
@@ -120,7 +121,7 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
         $Article->setImage($request->get('image'));  
 
        $updatedArticle= $this->repository->updateArticle($Article);
-       return new JsonResponse($updatedArticle->toArray(), Response::HTTP_OK);
+       return new JsonResponse($updatedArticle->toArray() ,Response::HTTP_OK);
 
       
     }
