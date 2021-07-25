@@ -57,7 +57,8 @@ class EquipeRepository extends ServiceEntityRepository
                 'nom' => (string) $article-> getNom(),
                 'prenom' => (string) $article->getPrenom(),
                 'role' => (string) $article->getRole(),
-                'Email' => (string) $article->getEmail(),     
+                'Email' => (string) $article->getEmail(),   
+                'Image' => (string) $article->getImage(),  
         ];
     }
     public function transformAll()

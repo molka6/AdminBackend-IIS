@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\EquipeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,6 +38,31 @@ class Equipe
      * @ORM\Column(type="string", length=255)
      */
     private $Email;
+
+
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     * @Assert\File(mimeTypes={ "image/png", "image/jpeg" }) 
+     */
+    private $Image;
+
+
+
+
+    public function getImage()
+    {
+        return $this->Image;
+    }
+
+    public function setImage($Image): self
+    {
+        $this->Image = $Image;
+
+        return $this;
+    }
+
+
 
     public function getId(): ?int
     {
@@ -90,15 +117,14 @@ class Equipe
         return $this;
     }
     public function toArray()
-        {
-            return [
-                'id' => $this->getId(),
-                'nom' => $this->getNom(),
-                'prenom' => $this->getPrenom(),
-                'role' => $this->getRole(),
-                'Email' => $this->getEmail(),
-                
-            ];
-        }
+    {
+        return [
+            'id' => $this->getId(),
+            'nom' => $this->getNom(),
+            'prenom' => $this->getPrenom(),
+            'role' => $this->getRole(),
+            'Email' => $this->getEmail(),
 
+        ];
+    }
 }
