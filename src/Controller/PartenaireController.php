@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\PartenaireRepository; 
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Partenaire; 
+use Symfony\Component\HttpFoundation\File;
 
 class PartenaireController extends ApiController 
 {
@@ -50,57 +51,75 @@ class PartenaireController extends ApiController
     
     public function createPartenaire( Request $request ,PartenaireRepository $partenaireRepository, EntityManagerInterface $em)
     {
-        $request = $this->transformJsonBody($request);
-        if (! $request) {
-            return $this->respondValidationError('Please provide a valid request!');
-        }
-        // validate the title
-        if (! $request->get("nom")) {
-            return $this->respondValidationError('Please provide a nom !');
-        }
-        if (! $request->get("logo")) {
-            return $this->respondValidationError('Please provide a logo!');
-        }
+        // $request = $this->transformJsonBody($request);
+        // if (! $request) {
+        //     return $this->respondValidationError('Please provide a valid request!');
+        // }
+        // // validate the title
+        // if (! $request->get("nom")) {
+        //     return $this->respondValidationError('Please provide a nom !');
+        // }
+        // if (! $request->get("logo")) {
+        //     return $this->respondValidationError('Please provide a logo!');
+        // }
 
-        
+        // echo($request ); 
         $Partenaire = new Partenaire();
-        $Partenaire-> setNom($request->get('nom'));
-        $Partenaire->setLogo($request->get('logo'));
+        $uploadedImage = $request->files->get('logo');
+         /**
+         * @var UploadedFile $image
+         */
+        $image = $uploadedImage;
+       
+         $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+         $image->move($this->getParameter('image_directory'), $imageName);
+         $Partenaire-> setNom($request->get('nom'));
+        $Partenaire->setLogo($imageName);
         $em->persist($Partenaire);
         $em->flush();
-        return $this->respondCreated($partenaireRepository->transform($Partenaire));
+        $response = array(
+
+            'code' => 0,
+            'message' => 'logo Uploaded with success!',
+            'errors' => null,
+            'result' => null
+
+        );
+        return new JsonResponse($response, Response::HTTP_CREATED);
       
       
     }
 
     /**
-    * @Route("/UpdatePartenaire/{id}", name="UpdatePartenaire", methods="PUT")
+    * @Route("/UpdatePartenaire/{id}", name="UpdatePartenaire", methods="POST")
     */
-    public function UpdatePartenaire($id , Request $request ) : JsonResponse
+    public function UpdatePartenaire($id , Request $request  ,EntityManagerInterface $em) : JsonResponse
     {
-        $request = $this->transformJsonBody($request);
+        $request->setMethod('PUT');
+        $Partenaire = $this->repository->findOneBy(['id' => $id]);
+        $uploadedImage = $request->files->get('logo');
+         /**
+         * @var UploadedFile $image
+         */
+        $image = $uploadedImage;
        
-        $partenaire = $this->repository->findOneBy(['id' => $id]);
-        if (! $partenaire) {
-            return new JsonResponse(['status' => 'offre not Found ']);
-        }
+         $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+         $image->move($this->getParameter('image_directory'), $imageName);
+         $Partenaire-> setNom($request->get('nom'));
+        $Partenaire->setLogo($imageName);
+        $em->persist($Partenaire);
+        $em->flush();
+        $response = array(
 
-        if (! $request) {
-            return $this->respondValidationError('Please provide a valid request!');
-        }
-        // validate the title
-        if (! $request->get("nom")) {
-            return $this->respondValidationError('Please provide a nom !');
-        }
-        if (! $request->get("logo")) {
-            return $this->respondValidationError('Please provide a logo!');
-        }
-        $partenaire-> setNom($request->get('nom'));
-        $partenaire->setLogo($request->get('logo'));
-       $updatedPartenaire= $this->repository->updatePartenaire(  $partenaire);
-       return new JsonResponse($updatedPartenaire->toArray(), Response::HTTP_OK);
+            'code' => 0,
+            'message' => 'Partner Updated!',
+            'errors' => null,
+            'result' => null
 
-      
+        );
+        return new JsonResponse($response, Response::HTTP_CREATED);
+
+  
     }
 
     
@@ -127,6 +146,43 @@ class PartenaireController extends ApiController
          $this->repository->removePartenaire($partenaire);
 
          return new JsonResponse(['status' => 'Partenaire deleted']);
+    }
+
+  /**
+     * @Route("/logos", name="logos")
+     */
+
+
+    public function getImages()
+    {
+
+
+        $logos=$this->getDoctrine()->getRepository('App:Partenaire')->findAll();
+
+
+        $data=$this->get('serializer')->serialize($logos,'json');
+
+        $response=array(
+
+            'message'=>'images loaded with sucesss',
+            'result' => json_decode($data)
+
+        );
+
+        return new JsonResponse($response,200);
+
+    }
+
+
+    /**
+     * @Route("/PartenaireLogo/{id}", name="deletePartenaireLogo", methods={"Get"})
+     */
+    public function deletelogo($id): JsonResponse
+    {
+        $logo = $this->getDoctrine()
+        ->getRepository(Partenaire::class)
+        ->deleteOneLoGO($id);
+        return new JsonResponse(['status' => 'logo deleted']);
     }
 
 }

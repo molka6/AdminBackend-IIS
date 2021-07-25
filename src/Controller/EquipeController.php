@@ -12,11 +12,12 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File;
 use App\Repository\EquipeRepository;
+use JMS\Serializer\SerializerInterface;
 
 class EquipeController extends ApiController
 {
 
-    public function __construct(EquipeRepository $repository)
+    public function __construct(EquipeRepository $repository )
     {
         $this->repository = $repository;
     }
@@ -38,6 +39,7 @@ class EquipeController extends ApiController
      */
     public function createEquipe(Request $request)
     {
+       
         $file =  new Equipe();
         $uploadedImage = $request->files->get('file');
         /**
@@ -132,7 +134,7 @@ class EquipeController extends ApiController
         $images=$this->getDoctrine()->getRepository('App:Equipe')->findAll();
 
 
-        $data=$this->get('jms_serializer')->serialize($images,'json');
+        $data=$this->get('serializer')->serialize($images,'json');
 
         $response=array(
 

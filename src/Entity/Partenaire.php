@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PartenaireRepository;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,6 +26,7 @@ class Partenaire
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *  @Assert\File(mimeTypes={ "image/png", "image/jpeg" }) 
      */
     private $logo;
 
@@ -37,19 +40,19 @@ class Partenaire
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getLogo(): ?string
+    public function getLogo()
     {
         return $this->logo;
     }
 
-    public function setLogo(?string $logo): self
+    public function setLogo($logo): self
     {
         $this->logo = $logo;
 
