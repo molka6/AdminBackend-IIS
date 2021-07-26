@@ -129,7 +129,7 @@ class EquipeController extends ApiController
     {
 
 
-        $images=$this->getDoctrine()->getRepository('App:File')->findAll();
+        $images=$this->getDoctrine()->getRepository('App:Equipe')->findAll();
 
 
         $data=$this->get('jms_serializer')->serialize($images,'json');

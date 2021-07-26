@@ -12,26 +12,11 @@ use App\Repository\ArticleRepository ;
 use App\Entity\Article; 
 
 class ArticleController extends ApiController
-{
-    // #[Route('/article', name: 'article')]
-    // public function index(): Response
-    // {
-    //     return $this->render('article/index.html.twig', [
-    //         'controller_name' => 'ArticleController',
-    //     ]);
-    // }
-
-
-
-
-    
+{   
 public function __construct(ArticleRepository $repository ,  EntityManagerInterface  $em )
 {
     $this-> repository= $repository;
     $this->em =  $em;
-
-     
-
 }
     /**
      * 
@@ -39,89 +24,86 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
      */
     public function index(ArticleRepository $repository)
     {
-    
         $Articles = $repository->transformAll();
         return $this->respond($Articles);
-
-    
     }
 
      /**
     * @Route("/createArticle",name="createArticle" , methods="POST")
     */
     
-    public function createArticle( Request $request , ArticleRepository $ArticleRepository, EntityManagerInterface $em)
-    {
-        $request = $this->transformJsonBody($request);
-        if (! $request) {
-            return $this->respondValidationError('Please provide a valid request!');
-        }
-        // validate the title
-        if (! $request->get("title")) {
-            return $this->respondValidationError('Please provide a title!');
-        }
-        if (! $request->get("description")) {
-            return $this->respondValidationError('Please provide a description !');
-        }
-        if (! $request->get("DateAjout")) {
-            return $this->respondValidationError('Please provide a description!');
-        }
-        if (! $request->get("image")) {
-            return $this->respondValidationError('Please provide a description!');
-        }
+    public function createArticle( Request $request )
+{
+        $file =  new Article();
+        $uploadedImage = $request->files->get('file');
+        /**
+         * @var UploadedFile $image
+         */
+        $image = $uploadedImage;
+        $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+        $image->move($this->getParameter('image_directory'), $imageName);
+        $file->setImage($imageName);
 
-        
-        $Article = new Article();
-        $Article-> setTitle($request->get('title'));
-        $Article->setDescription($request->get('description'));
-        $Article->setDateAjout($request->get('DateAjout')); 
-        $Article->setImage($request->get('image')); 
+        $file->setTitle($request->get("title"));
+        $file->setDescription($request->get("description"));
+        $file->setDateAjout($request->get("DateAjout"));
 
-        $em->persist( $Article);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($file);
         $em->flush();
-        return $this->respondCreated($ArticleRepository->transform($Article));
-      
-      
+        $response = array(
+
+            'code' => 0,
+            'message' => 'File Uploaded with success!',
+            'errors' => null,
+            'result' => null
+
+        );
+        return new JsonResponse($response, Response::HTTP_CREATED);
     }
 
 
     /**
     * @Route("/UpdateArticle/{id}", name="UpdateArticle", methods="PUT")
     */
-    public function UpdateArticle($id , Request $request ) : JsonResponse
+    public function UpdateArticle($id , Request $request ) 
     {
-        $request = $this->transformJsonBody($request);
-       
-        $Article = $this->repository->findOneBy(['id' => $id]);
-        if (! $Article) {
+    
+        $file = $this->repository->findOneBy(['id' => $id]);
+        if (! $file) {
             return new JsonResponse(['status' => 'offre not Found ']);
         }
+        $file= new Article();
 
-        if (! $request) {
-            return $this->respondValidationError('Please provide a valid request!');
-        }
-        if (! $request->get("title")) {
-            return $this->respondValidationError('Please provide a title!');
-        }
-        if (! $request->get("description")) {
-            return $this->respondValidationError('Please provide a description !');
-        }
-        if (! $request->get("DateAjout")) {
-            return $this->respondValidationError('Please provide a description!');
-        }
-        if (! $request->get("image")) {
-            return $this->respondValidationError('Please provide a description!');
-        }
-    
-        $Article = new Article();
-        $Article-> setTitle($request->get('title'));
-        $Article->setDescription($request->get('description'));
-        $Article->setDateAjout($request->get('DateAjout')); 
-        $Article->setImage($request->get('image'));  
+        
+        $uploadedImage = $request->files->get('file');
+        /**
+         * @var UploadedFile $image
+         */
+        $image = $uploadedImage;
+        $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+        $image->move($this->getParameter('image_directory'), $imageName);
+        $file->setImage($imageName);
 
-       $updatedArticle= $this->repository->updateArticle($Article);
-       return new JsonResponse($updatedArticle->toArray(), Response::HTTP_OK);
 
+
+        $file->setTitle($request->get('title'));
+        $file->setDescription($request->get('description'));
+        $file->setDateAjout($request->get('DateAjout')); 
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($file);
+        $em->flush();
+
+       $response = array(
+
+        'code' => 0,
+        'message' => 'update with success!',
+        'errors' => null, 
+        'result' => null
+
+    );
+    return new JsonResponse($response, Response::HTTP_CREATED);
       
     }
 
@@ -150,9 +132,27 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
     }
     
   
-   
-   
 
-    
+    public function getImages()
+    {
+
+
+        $images=$this->getDoctrine()->getRepository('App:Article')->findAll();
+
+
+        $data=$this->get('jms_serializer')->serialize($images,'json');
+
+        $response=array(
+
+            'message'=>'images loaded with sucesss',
+            'result' => json_decode($data)
+
+        );
+
+        return new JsonResponse($response,200);
+
+    }
+
+
 
 }
