@@ -2,72 +2,90 @@
 
 namespace App\Entity;
 
-use App\Repository\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
-/**
- *   @ApiResource(
- *     normalizationContext={"groups"={"service:read"}},
- *     denormalizationContext={"groups"={"service:write"}}
+use Symfony\Component\Serializer\Annotation\Groups;
+
+ /**
+ * 
+ * @ApiResource(
+ *      collectionOperations={
+ *          "get"={
+ *              "denormalization_context"={
+ *                  "groups"={"read"},
+ *              },
+ *          },
+ *      },
  * )
- * @ORM\Entity(repositoryClass=ServiceRepository::class)
+ * 
+ * @ORM\Table(name="service")
+ * @ORM\Entity
  */
 class Service
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="text", length=0, nullable=true)
      */
     private $description;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
 
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
+public function getId(): ?int
+{
+    return $this->id;
+}
 
-        return $this;
-    }
+public function getTitle(): ?string
+{
+    return $this->title;
+}
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
+public function setTitle(string $title): self
+{
+    $this->title = $title;
 
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
+    return $this;
+}
 
-        return $this;
-    }
+public function getDescription(): ?string
+{
+    return $this->description;
+}
 
-    public function toArray()
-    {
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'Description' => $this->getDescription(),
-         
-            
-        ];
-    }
+public function setDescription(?string $description): self
+{
+    $this->description = $description;
+
+    return $this;
+}
+
+public function toArray()
+{
+    return [
+        'id' => $this->getId(),
+        'title' => $this->getTitle(),
+        'Description' => $this->getDescription(),
+     
+        
+    ];
+}
 }
