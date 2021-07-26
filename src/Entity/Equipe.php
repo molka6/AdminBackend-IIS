@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\EquipeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
+
 /**
+ * @ApiResource(formats="json")
  * @ORM\Entity(repositoryClass=EquipeRepository::class)
  */
 class Equipe
@@ -124,6 +128,7 @@ class Equipe
             'prenom' => $this->getPrenom(),
             'role' => $this->getRole(),
             'Email' => $this->getEmail(),
+            'Image'=> $this->getImage(),
 
         ];
     }

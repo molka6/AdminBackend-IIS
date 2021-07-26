@@ -122,20 +122,24 @@ class PartenaireController extends ApiController
   
     }
 
-    
+
+
+
+
+
     /**
-    * @Route("/getPartenaire/{id}", name="getPartenaire", methods="GET")
-    */
-
-    public function getPartenaire ($id): JsonResponse
-
-        {
-             
+     * @Route("/getPartenaire/{id}", name="getPartenaire", methods="GET")
+     */
+    public function getPartenaire($id): JsonResponse
+    {  
         $Partenaire= $this->repository->findOneBy(['id' => $id]);
         return new JsonResponse($Partenaire->toArray(), Response::HTTP_OK);
-
         }
 
+
+
+
+        
 
     /**
      * @Route("/Partenaire/{id}", name="deletePartenaire", methods={"DELETE"})
@@ -148,30 +152,29 @@ class PartenaireController extends ApiController
          return new JsonResponse(['status' => 'Partenaire deleted']);
     }
 
-  /**
+
+
+
+
+    /**
      * @Route("/logos", name="logos")
      */
-
-
     public function getImages()
     {
-
-
-        $logos=$this->getDoctrine()->getRepository('App:Partenaire')->findAll();
-
-
-        $data=$this->get('serializer')->serialize($logos,'json');
-
+        $logos = $this->getDoctrine()->getRepository('App:Partenaire')->findAll();
+        $data = $this->get('serializer')->serialize($logos, 'json');
         $response=array(
 
             'message'=>'images loaded with sucesss',
             'result' => json_decode($data)
 
         );
-
-        return new JsonResponse($response,200);
-
+        return new JsonResponse($response, 200);
     }
+
+
+
+
 
 
     /**

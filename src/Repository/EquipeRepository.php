@@ -86,5 +86,20 @@ class EquipeRepository extends ServiceEntityRepository
     }
 
 
+    public function deleteOneLoGO(int $PartenaireId): ?int
+    {
+
+        return $this->em->createQueryBuilder()
+            ->update(Equipe::class, 'p')
+            ->set('p.Image', ':Null')
+            ->where('p.id= :val')
+            ->setParameter('val', $PartenaireId)
+            ->setParameter('Null', '')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
 
 }

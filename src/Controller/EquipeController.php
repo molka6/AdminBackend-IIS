@@ -17,10 +17,17 @@ use JMS\Serializer\SerializerInterface;
 class EquipeController extends ApiController
 {
 
+
+
     public function __construct(EquipeRepository $repository )
     {
         $this->repository = $repository;
     }
+
+
+
+
+
     /**
      * @Route("/personne", name="personne")
      */
@@ -34,12 +41,12 @@ class EquipeController extends ApiController
 
 
 
+
     /** 
      * @Route("/createpersonne", name="createpersonne" , methods={"POST"}  )
      */
     public function createEquipe(Request $request)
     {
-       
         $file =  new Equipe();
         $uploadedImage = $request->files->get('file');
         /**
@@ -67,41 +74,46 @@ class EquipeController extends ApiController
         return new JsonResponse($response, Response::HTTP_CREATED);
     }
 
+
+
+
+
+
     /**
      * @Route("/updatepersonn/{id}")
      */
-    public function Updatepersonne($id, Request $request, EquipeRepository $repository): JsonResponse
+    public function Updatepersonne($id, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        $offreEmploi = $repository->findOneBy(['id' => $id]);
-        if (!$offreEmploi) {
-            return new JsonResponse(['status' => 'personne not Found ']);
-        }
-        $request = $this->transformJsonBody($request);
+        $request->setMethod('PUT');
+        $equipe = $this->repository->findOneBy(['id' => $id]);
+        $uploadedImage = $request->files->get('file');
+        /**
+         * @var UploadedFile $image
+         */
+        $image = $uploadedImage;
+        $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+        $image->move($this->getParameter('image_directory'), $imageName);
+        $equipe->setNom($request->get('nom'));
+        $equipe->setPrenom($request->get('prenom'));
+        $equipe->setRole($request->get('role'));
+        $equipe->setEmail($request->get('Email'));
+        $equipe->setImage($imageName);
+        $em->persist($equipe);
+        $em->flush();
+        $response = array(
+            'code' => 0,
+            'message' => 'Partner Updated!',
+            'errors' => null,
+            'result' => null
 
-        if (!$request) {
-            return $this->respondValidationError('Please provide a valid request!');
-        }
-
-        // validate the title
-        if (!$request->get("nom")) {
-            return $this->respondValidationError('Please provide a nom!');
-        }
-        if (!$request->get("prenom")) {
-            return $this->respondValidationError('Please provide a prenom !');
-        }
-        if (!$request->get("role")) {
-            return $this->respondValidationError('Please provide a role!');
-        }
-        if (!$request->get("Email")) {
-            return $this->respondValidationError('Please provide Email!');
-        }
-        $offreEmploi->setNom($request->get("nom"));
-        $offreEmploi->setPrenom($request->get("prenom"));
-        $offreEmploi->setRole($request->get("role"));
-        $offreEmploi->setEmail($request->get("Email"));
-        $updatedOffre = $repository->updateOffre($offreEmploi);
-        return new JsonResponse($updatedOffre->toArray(), Response::HTTP_OK);
+        );
+        return new JsonResponse($response, Response::HTTP_CREATED);
     }
+
+
+    
+
+
     /**
      * @Route("personne/{id}", name="getpersonn", methods="GET")
      */
@@ -110,6 +122,10 @@ class EquipeController extends ApiController
         $offreEmploi = $repository->findOneBy(['id' => $id]);
         return new JsonResponse($offreEmploi->toArray(), Response::HTTP_OK);
     }
+
+
+
+
 
 
     /**
@@ -122,30 +138,38 @@ class EquipeController extends ApiController
         return new JsonResponse(['status' => ' deleted']);
     }
 
-     /**
+
+
+
+
+    /**
      * @Route("/images", name="images")
      */
-
-
     public function getImages()
     {
-
-
-        $images=$this->getDoctrine()->getRepository('App:Equipe')->findAll();
-
-
-        $data=$this->get('serializer')->serialize($images,'json');
-
-        $response=array(
-
-            'message'=>'images loaded with sucesss',
+        $images = $this->getDoctrine()->getRepository('App:Equipe')->findAll();
+        $data = $this->get('serializer')->serialize($images, 'json');
+        $response = array(
+            'message' => 'images loaded with sucesss',
             'result' => json_decode($data)
 
         );
-
-        return new JsonResponse($response,200);
-
+        return new JsonResponse($response, 200);
     }
+
+
+
+
+    /**
+     * @Route("/Image/{id}", name="Image", methods={"Get"})
+     */
+    public function deletelogo($id): JsonResponse
+    {
+        $logo = $this->getDoctrine()->getRepository(Equipe::class)->deleteOneLoGO($id);
+        return new JsonResponse(['status' => 'logo deleted']);
+    }
+
+
 
 
 }
