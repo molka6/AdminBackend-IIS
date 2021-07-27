@@ -47,6 +47,12 @@ class Service
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $pourcentage;
+
+
 
 
 public function getId(): ?int
@@ -88,4 +94,18 @@ public function toArray()
         
     ];
 }
+
+public function getPourcentage(): ?int
+{
+    return $this->pourcentage;
+}
+
+public function setPourcentage(int $pourcentage): self
+{
+    $this->pourcentage = $pourcentage;
+
+    return $this;
+}
+
+
 }

@@ -6,8 +6,19 @@ use App\Repository\PartenaireRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * 
+ * @ApiResource(
+ *      collectionOperations={
+ *          "get"={
+ *              "denormalization_context"={
+ *                  "groups"={"read"},
+ *              },
+ *          },
+ *      },
+ * )
  * @ORM\Entity(repositoryClass=PartenaireRepository::class)
  */
 class Partenaire
