@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource(formats="json")
  * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
 class Contact

@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- *@ApiResource(
+ * 
+ * @ApiResource(
  *      collectionOperations={
  *          "get"={
  *              "denormalization_context"={
@@ -16,26 +17,43 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *          },
  *      },
  * )
- * @ORM\Entity(repositoryClass=ServiceRepository::class)
+ * 
+ * @ORM\Table(name="service")
+ * @ORM\Entity
  */
 class Service
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="text", length=0, nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $pourcentage;
+
+
+
 
     public function getId(): ?int
     {
@@ -72,8 +90,20 @@ class Service
             'id' => $this->getId(),
             'title' => $this->getTitle(),
             'Description' => $this->getDescription(),
-         
-            
+
+
         ];
+    }
+
+    public function getPourcentage(): ?int
+    {
+        return $this->pourcentage;
+    }
+
+    public function setPourcentage(int $pourcentage): self
+    {
+        $this->pourcentage = $pourcentage;
+
+        return $this;
     }
 }
