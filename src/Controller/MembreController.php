@@ -38,6 +38,22 @@ class MembreController extends ApiController{
          return new JsonResponse(['status' => ' deleted']);
     }
 
+    /**
+     * @Route("/Member/{email}", methods="get")
+     */
+    public function findMember($email, MembreRepository  $repository): JsonResponse
+    {
+        $member =$repository->findOneBy(['email' => $email]);
+        if($member)
+        {
+         return new JsonResponse($member->toArray(), Response::HTTP_OK);
+        }
+        else 
+        {
+            return new JsonResponse($member, Response::HTTP_OK);
+        }
+    }
+
 
 
 

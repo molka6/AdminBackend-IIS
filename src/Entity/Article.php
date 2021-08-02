@@ -8,11 +8,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * * @ApiResource(
- *     normalizationContext={"groups"={"article:read"}},
- *     denormalizationContext={"groups"={"article:write"}}
+ * @ApiResource(
+ *      collectionOperations={
+ *          "get"={
+ *              "denormalization_context"={
+ *                  "groups"={"read"},
+ *              },
+ *          },
+ *      },
  * )
- * @ORM\Entity(repositoryClass=ArticleRepository::class)
+ *@ORM\Table(name="Article")
+ * @ORM\Entity
  */
 class Article
 {

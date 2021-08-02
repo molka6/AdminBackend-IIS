@@ -178,4 +178,17 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'nom' => $this->getNom(),
+            'prenom' => $this-> getPrenom(),
+            'email' => $this->getUserIdentifier(), 
+            'telephone' => $this-> getTelephone(),
+            
+        ];
+    }
 }
