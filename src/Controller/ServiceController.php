@@ -68,6 +68,7 @@ public function __construct(ServiceRepository $repository ,  EntityManagerInterf
         $service = new Service();
         $service-> setTitle($request->get('title'));
         $service-> setDescription($request->get('description'));
+        $service-> setPourcentage($request->get('pourcentage'));
         $em->persist($service);
         $em->flush();
         return $this->respondCreated($serviceRepository->transform($service));
