@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\OffreEmploiRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource(formats="json")
  * @ORM\Entity(repositoryClass=OffreEmploiRepository::class)
  */
 class OffreEmploi
@@ -23,7 +25,7 @@ class OffreEmploi
     private $titre;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
