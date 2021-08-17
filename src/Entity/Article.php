@@ -55,6 +55,11 @@ class Article
      */
     private $avis;
 
+
+
+
+    
+
     public function __construct()
     {
         $this->avis = new ArrayCollection();

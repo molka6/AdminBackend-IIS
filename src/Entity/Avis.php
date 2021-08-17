@@ -32,16 +32,29 @@ class Avis
      */
     private $prenom;
 
+
+
     /**
      * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="avis")
      * @ORM\JoinColumn(nullable=false)
      */
     private $article;
 
+
+
+
+
+    
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Membre::class, inversedBy="avis")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $membre;
 
     public function getId(): ?int
     {
@@ -116,6 +129,18 @@ class Avis
     public function setDate(string $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getMembre(): ?Membre
+    {
+        return $this->membre;
+    }
+
+    public function setMembre(?Membre $membre): self
+    {
+        $this->membre = $membre;
 
         return $this;
     }

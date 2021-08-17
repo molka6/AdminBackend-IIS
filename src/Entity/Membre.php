@@ -6,6 +6,10 @@ use App\Repository\MembreRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+
 
 /**
  * @ORM\Entity(repositoryClass=MembreRepository::class)
@@ -50,8 +54,19 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $telephone;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Avis::class, mappedBy="membre")
+     */
+    private $avis;
+
+    public function __construct()
+    {
+        $this->avis = new ArrayCollection();
+    }
 
 
+
+   
 
 
     public function getId(): ?int
@@ -191,4 +206,35 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
             
         ];
     }
+
+    /**
+     * @return Collection|Avis[]
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): self
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis[] = $avi;
+            $avi->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): self
+    {
+        if ($this->avis->removeElement($avi)) {
+            // set the owning side to null (unless already changed)
+            if ($avi->getMembre() === $this) {
+                $avi->setMembre(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
