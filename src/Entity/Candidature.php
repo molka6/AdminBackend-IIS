@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\CandidatureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- *  @ApiResource(formats="json")
+ *
+ * @ApiResource( )
  * @ORM\Entity(repositoryClass=CandidatureRepository::class)
  */
 
@@ -35,10 +39,38 @@ class Candidature
      */
     private $email;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+/**
+* @ORM\Column()
+* @ApiProperty(
+*   iri="http://schema.org/cv",
+*   attributes={
+*     "openapi_context"={
+*       "type"="string",
+*     }
+*   }
+* )
+*/
     private $cv;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=OffreEmploi::class, mappedBy="condidature" ,cascade={"persist"})
+     */
+    private $offreEmplois;
+
+
+
+
+
+
+
+
+
+
+
+    public function __construct()
+    {
+        $this->offreEmplois = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +121,33 @@ class Candidature
     public function setCv( $cv)
     {
         $this->cv = $cv;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OffreEmploi[]
+     */
+    public function getOffreEmplois(): Collection
+    {
+        return $this->offreEmplois;
+    }
+
+    public function addOffreEmploi(OffreEmploi $offreEmploi)
+    {
+        if (!$this->offreEmplois->contains($offreEmploi)) {
+            $this->offreEmplois[] = $offreEmploi;
+            $offreEmploi->addCondidature($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffreEmploi(OffreEmploi $offreEmploi): self
+    {
+        if ($this->offreEmplois->removeElement($offreEmploi)) {
+            $offreEmploi->removeCondidature($this);
+        }
 
         return $this;
     }
