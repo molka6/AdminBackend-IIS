@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ArticleRepository ; 
 use App\Entity\Article; 
+use JMS\Serializer\SerializerInterface;
 
 class ArticleController extends ApiController
 {   
@@ -132,15 +133,20 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
     }
     
   
+     /**
+     * 
+     * @Route("image", name="Articles"  ,methods={"GET"} )
+     */
+
+
 
     public function getImages()
     {
 
-
         $images=$this->getDoctrine()->getRepository('App:Article')->findAll();
 
 
-        $data=$this->get('jms_serializer')->serialize($images,'json');
+        $data=$this->get('serializer')->serialize($images,'json');
 
         $response=array(
 

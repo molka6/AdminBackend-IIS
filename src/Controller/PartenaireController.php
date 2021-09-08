@@ -189,6 +189,23 @@ class PartenaireController extends ApiController
 
 
 
+    /**
+     * @Route("image/{id}",name="show_image" ,methods={"GET"})
+     */
+    public function getImage($id)
+    {
+        $imageName=$this->getDoctrine()->getRepository('App:Partenaire')->find($id)->getLogo();
+        $response=array(
+
+            'code'=>0,
+            'message'=>'get image with success!',
+            'errors'=>null,
+            'image'=>$imageName
+
+        );
+        return new JsonResponse($response,200);
+    }
+
 
 
 
@@ -218,6 +235,8 @@ class PartenaireController extends ApiController
     //     );
     //     return new JsonResponse($response, 200);
     // }
+
+
 
 
 
