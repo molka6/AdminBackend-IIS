@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Membre;
 use App\Repository\MembreRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class MembreController extends ApiController{
@@ -55,6 +57,47 @@ class MembreController extends ApiController{
     }
 
 
+/**
+    * @Route("/createmember",name="createMember" , methods={"POST"})
+    */
+    
+    public function createMember( Request $request , MembreRepository $membreRepository, EntityManagerInterface $em)
+    {
+        $request = $this->transformJsonBody($request);
+        if (! $request) {
+            return $this->respondValidationError('Please provide a valid request!');
+        }
+        // validate the title
+       
+            $email = $request->get("email"); 
+            $member = $this->repository->findOneBy(['email' => $email ]);
+           
+        if ($member)
+        {
+            return new JsonResponse(['status' => 'true']);
+        }
+        else 
+        {
+            $member = new Membre();
+            $member ->setEmail($request->get('email'));
+            $member ->setPrenom($request->get('prenom')); 
+            $member ->setTelephone($request->get('telephone')); 
+            $member ->setPassword($request->get('password'));
+            // $member >setNom($request->get('nom')); 
+            $em->persist($member);
+            $em->flush();
+            return $this->respondCreated($membreRepository->transform($member));
 
+        }
+       
+
+        
+       
+      
+      
+    }
+
+
+   
 
 }

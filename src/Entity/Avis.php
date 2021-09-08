@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Entity;
-
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AvisRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiResource(formats="json")
  * @ORM\Entity(repositoryClass=AvisRepository::class)
  */
 class Avis
@@ -55,6 +56,11 @@ class Avis
      * @ORM\JoinColumn(nullable=false)
      */
     private $membre;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $publier;
 
     public function getId(): ?int
     {
@@ -141,6 +147,18 @@ class Avis
     public function setMembre(?Membre $membre): self
     {
         $this->membre = $membre;
+
+        return $this;
+    }
+
+    public function getPublier(): ?bool
+    {
+        return $this->publier;
+    }
+
+    public function setPublier(bool $publier): self
+    {
+        $this->publier = $publier;
 
         return $this;
     }

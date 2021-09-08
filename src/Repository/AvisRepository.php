@@ -57,7 +57,7 @@ class AvisRepository extends ServiceEntityRepository
     {
        
         return $this->createQueryBuilder('a')
-        ->where('a.article= :val')
+        ->andWhere('a.article= :val AND a.publier = true ')
         ->setParameter('val', $articleId )
         ->getQuery()
         ->getResult();

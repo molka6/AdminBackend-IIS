@@ -6,13 +6,18 @@ use App\Repository\MembreRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\Collection;
 
 
 /**
+ * @ApiResource(formats="json")
  * @ORM\Entity(repositoryClass=MembreRepository::class)
+ * 
+ * 
+ * 
  */
 class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -24,7 +29,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180)
      */
     private $email;
 
@@ -163,7 +168,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->nom;
     }
 
-    public function setNom(?string $nom): self
+    public function setNom( $nom): self
     {
         $this->nom = $nom;
 
