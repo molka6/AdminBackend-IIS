@@ -144,6 +144,40 @@ class OffreEmploiController extends ApiController
     }
     
 
+   /**
+    * @Route("/getcandidatureOffre/{id}", name="getcandidatureOffre", methods="GET")
+    */
+
+    public function getcandidatureOffre ($id): JsonResponse
+        {
+        $offreEmploi = $this->repository->myFindByTypes($id);
+        return new JsonResponse($offreEmploi, Response::HTTP_OK);
+        }
+
+
+
+             
+    /**
+    * @Route("candidature", name="getArticle", methods="GET")
+    */
+
+    // public function index(CandidatureRepository $repo)
+    // {
+
+    //     $em = $this->getDoctrine()->getManager();
+    //     $repository = $em->getRepository('App:OffreEmploi');
+
+    //     $cards = $repo->myFindByTypes('Chef de projet logiciel ');
+    //     return new JsonResponse(['cards' => $cards[0]->$repository->getTitre()], Response::HTTP_CREATED);
+    // }
+// $em = $this->getDoctrine()->getManager();
+//         $repository = $em->getRepository('App:OffreEmploi');
+//         $offre= $repository->findOneBy(['id' => $id]);
+        
+        // ['offre' => $offre]
+
+
+
 
 
 

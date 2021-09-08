@@ -7,22 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Candidature;
-use App\Entity\OffreEmploi;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\repository\OffreEmploiRepository;
-use Doctrine\ORM\EntityManagerInterface;
-
-
+use App\Repository\CandidatureRepository; 
 
 
 class CandidatureController extends AbstractController
 {
-   
+
     /**
-    * @Route("/createCandidature",name="createCandidature" , methods="POST")
+    * @Route("/createCandidature/{id}",name="createCandidature" , methods="POST")
     */
     
-    public function createArticle(Request $request )
+    public function createArticle(Request $request ,$id  )
 {
         $file =  new Candidature();
         $uploadedImage = $request->files->get('cv');
@@ -33,16 +29,13 @@ class CandidatureController extends AbstractController
         $imageName = md5(uniqid()) . '.' . $image->guessExtension();
         $image->move($this->getParameter('image_directory'), $imageName);
         $file->setCv($imageName);
-
         $file->setNom($request->get("nom"));
         $file->setPrenom($request->get("prenom"));
         $file->setEmail($request->get("email"));
-
-    
-    
-
-
-
+        $em = $this->getDoctrine()->getManager();
+        $offre = $em->getRepository('App:OffreEmploi')
+        ->findOneBy(['id'=> $id ]); 
+        $file->addOffreEmploi($offre);
         $em = $this->getDoctrine()->getManager();
         $em->persist($file);
         $em->flush();
@@ -55,15 +48,8 @@ class CandidatureController extends AbstractController
 
         );
         return new JsonResponse($response, Response::HTTP_CREATED);
-    }
+    } 
 
-
-
-
-
-
-
-
-
-    
+ 
 }
+

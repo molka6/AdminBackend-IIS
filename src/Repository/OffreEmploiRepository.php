@@ -95,4 +95,16 @@ class OffreEmploiRepository extends ServiceEntityRepository
         $this->em->flush();
     }
     
+
+    public function myFindByTypes($offre)
+    {
+        $qb = $this->createQueryBuilder('card')
+           ->leftJoin ('card.condidature','t')
+           ->where('t.id= :id')
+           ->setParameter('id', $offre);
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+        return $results;
+    }
+
 }

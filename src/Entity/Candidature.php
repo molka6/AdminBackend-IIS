@@ -11,8 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
- * @ApiResource( )
- * @ORM\Entity(repositoryClass=CandidatureRepository::class)
+ *@ApiResource( attributes={ "input_formats"={"multipart" :{"multipart/form-data"}}, "output_formats"={"json"={"application/ld+json"}}, "deserialize"=false, })
+ *@ORM\Entity(repositoryClass=CandidatureRepository::class)
  */
 
 class Candidature
@@ -39,30 +39,15 @@ class Candidature
      */
     private $email;
 
-/**
-* @ORM\Column()
-* @ApiProperty(
-*   iri="http://schema.org/cv",
-*   attributes={
-*     "openapi_context"={
-*       "type"="string",
-*     }
-*   }
-* )
-*/
+    /**
+    * @ORM\Column()
+    */
     private $cv;
 
     /**
      * @ORM\ManyToMany(targetEntity=OffreEmploi::class, mappedBy="condidature" ,cascade={"persist"})
      */
     private $offreEmplois;
-
-
-
-
-
-
-
 
 
 
@@ -125,6 +110,7 @@ class Candidature
         return $this;
     }
 
+    
     /**
      * @return Collection|OffreEmploi[]
      */
@@ -132,6 +118,7 @@ class Candidature
     {
         return $this->offreEmplois;
     }
+
 
     public function addOffreEmploi(OffreEmploi $offreEmploi)
     {
@@ -143,6 +130,7 @@ class Candidature
         return $this;
     }
 
+
     public function removeOffreEmploi(OffreEmploi $offreEmploi): self
     {
         if ($this->offreEmplois->removeElement($offreEmploi)) {
@@ -151,4 +139,6 @@ class Candidature
 
         return $this;
     }
+
+
 }
