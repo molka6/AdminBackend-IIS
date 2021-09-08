@@ -38,6 +38,7 @@ class Partenaire
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *  @Assert\File(mimeTypes={ "image/png", "image/jpeg" }) 
+     * 
      */
     private $logo;
 
@@ -57,6 +58,10 @@ class Partenaire
 
         return $this;
     }
+
+    /**
+    *@return File
+    */
 
     public function getLogo()
     {

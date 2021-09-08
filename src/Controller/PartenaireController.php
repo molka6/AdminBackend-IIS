@@ -157,18 +157,33 @@ class PartenaireController extends ApiController
 
 
     /**
-     * @Route("/logos", name="logos")
+     *  @param string $uploadDir
+     * @Route("/logos/{id}", name="logos")
      */
-    public function getImages()
+    public function getImages(
+        $id , $uploadDir
+    )
     {
-        $logos = $this->getDoctrine()->getRepository('App:Partenaire')->findAll();
+        $logos = $this->getDoctrine()->getRepository('App:Partenaire')->find(
+            $id
+        )->getLogo();
+     
         $data = $this->get('serializer')->serialize($logos, 'json');
-        $response=array(
+      
+        try {
 
-            'message'=>'images loaded with sucesss',
-            'result' => json_decode($data)
+            $file->getLogo( $uploadDir , $logos);
+            $response=array(
 
-        );
+                'message'=>'images loaded with sucesss',
+                'result' => ($file )
+    
+            );
+        } catch (FileException $e){
+
+            $this->logger->error('failed to upload image: ' . $e->getMessage());
+            throw new FileException('Failed to upload file');
+        }
         return new JsonResponse($response, 200);
     }
 
@@ -187,5 +202,23 @@ class PartenaireController extends ApiController
         ->deleteOneLoGO($id);
         return new JsonResponse(['status' => 'logo deleted']);
     }
+     /**
+     * @Route("/images/{id}", name="images")
+     */
+    // public function getImages($id)
+    // {
+    //     $images = $this->getDoctrine()->getRepository('App:Equipe')->find(
+    //         $id
+    //     )->getImage();
+    //     $data = $this->get('serializer')->serialize($images, 'json');
+    //     $response = array(
+    //         'message' => 'images loaded with sucesss',
+    //         'result' => json_decode($data)
+
+    //     );
+    //     return new JsonResponse($response, 200);
+    // }
+
+
 
 }
