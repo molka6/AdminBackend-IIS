@@ -1,0 +1,14 @@
+ const fb=new FormData();
+    fb.append('image',this._createArticleComponent.selectedFile, this._createArticleComponent.selectedFile.name);
+private  _createArticleComponent : CreateArticleComponent
+
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>image</label>
+                      <input formControlName="image" placeholder='image' type="file" class="form-control" (change)="OnFileSelected($event)">
+
+                    </div>
+                  </div>
+                </div>

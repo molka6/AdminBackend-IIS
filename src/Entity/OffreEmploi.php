@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OffreEmploiRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -33,6 +35,23 @@ class OffreEmploi
      * @ORM\Column(type="string", length=255)
      */
     private $DateAjout;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Candidature::class, inversedBy="offreEmplois")
+     */
+    private $condidature;
+
+
+
+
+
+
+
+
+    public function __construct()
+    {
+        $this->condidature = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -87,4 +106,28 @@ class OffreEmploi
                 
             ];
         }
+
+    /**
+     * @return Collection|Candidature[]
+     */
+    public function getCondidature(): Collection
+    {
+        return $this->condidature;
+    }
+
+    public function addCondidature(Candidature $condidature): self
+    {
+        if (!$this->condidature->contains($condidature)) {
+            $this->condidature[] = $condidature;
+        }
+
+        return $this;
+    }
+
+    public function removeCondidature(Candidature $condidature): self
+    {
+        $this->condidature->removeElement($condidature);
+
+        return $this;
+    }
 }
