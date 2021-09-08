@@ -20,8 +20,7 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
     $this->em =  $em;
 }
     /**
-     * 
-     * @Route("Articles", name="Articles"  ,methods={"GET"} )
+     * @Route("Article", name="Article"  ,methods="GET" )
      */
     public function index(ArticleRepository $repository)
     {
