@@ -66,6 +66,20 @@ class AvisRepository extends ServiceEntityRepository
 
     }
 
+    
+    public function findAvisOfArticleTOUS(int $articleId): ?array
+    {
+       
+        return $this->createQueryBuilder('a')
+        ->andWhere('a.article= :val')
+        ->setParameter('val', $articleId )
+        ->getQuery()
+        ->getResult();
+       
+      
+
+    }
+
     public function transform(Avis $avis)
     {
         return [
@@ -74,6 +88,7 @@ class AvisRepository extends ServiceEntityRepository
                 'prenom' => (string) $avis->getPrenom(),
                 'contenu'=> (string) $avis-> getContenu(),
                 'date'=> (string) $avis->getDate(),
+                'publier'=> (string) $avis->getPublier(),
                 
         ];
     }
