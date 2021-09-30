@@ -62,20 +62,102 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
         return new JsonResponse($response, Response::HTTP_CREATED);
     }
 
-
-    /**
-    * @Route("/UpdateArticle/{id}", name="UpdateArticle", methods="PUT")
-    */
-    public function UpdateArticle($id , Request $request ) 
-    {
+    // public function UpdateArticle($id , Request $request ) 
+    // {
     
-        $file = $this->repository->findOneBy(['id' => $id]);
-        if (! $file) {
-            return new JsonResponse(['status' => 'offre not Found ']);
-        }
-        $file= new Article();
+    //     $file = $this->repository->findOneBy(['id' => $id]);
+    //     if (! $file) {
+    //         return new JsonResponse(['status' => 'offre not Found ']);
+    //     }
+    //     $file= new Article();
 
         
+    //     $uploadedImage = $request->files->get('file');
+    //     /**
+    //      * @var UploadedFile $image
+    //      */
+    //     $image = $uploadedImage;
+    //     $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+    //     $image->move($this->getParameter('image_directory'), $imageName);
+    //     $file->setImage($imageName);
+
+
+
+    //     $file->setTitle($request->get('title'));
+    //     $file->setDescription($request->get('description'));
+    //     $file->setDateAjout($request->get('DateAjout')); 
+        
+    //     $em = $this->getDoctrine()->getManager();
+    //     $em->persist($file);
+    //     $em->flush();
+
+    //    $response = array(
+
+    //     'code' => 0,
+    //     'message' => 'update with success!',
+    //     'errors' => null, 
+    //     'result' => null
+
+    // );
+    // return new JsonResponse($response, Response::HTTP_CREATED);
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   /**
+    * @Route("/UpdateArticle/{id}", name="UpdateArticle", methods="POST")
+    */
+    public function Updatepersonne($id, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $request->setMethod('PUT');
+        $equipe = $this->repository->findOneBy(['id' => $id]);
+    
+    
+        if (!$request->files->get('file') )
+        {
+            $equipe->setTitle($request->get('title'));
+            $equipe->setDescription($request->get('description'));
+            $equipe->setDateAjout($request->get('DateAjout'));
+            $em->persist($equipe);
+            $em->flush();
+            $response = array(
+                'code' => 0,
+                'message' => 'Partner Updated!',
+                'errors' => null,
+                'result' => null
+            );
+            return new JsonResponse("hhhhh");
+        }
+
+
+
+
+
+        else 
+        {
         $uploadedImage = $request->files->get('file');
         /**
          * @var UploadedFile $image
@@ -83,42 +165,71 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
         $image = $uploadedImage;
         $imageName = md5(uniqid()) . '.' . $image->guessExtension();
         $image->move($this->getParameter('image_directory'), $imageName);
-        $file->setImage($imageName);
-
-
-
-        $file->setTitle($request->get('title'));
-        $file->setDescription($request->get('description'));
-        $file->setDateAjout($request->get('DateAjout')); 
-        
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($file);
+        $equipe->setTitle($request->get('title'));
+        $equipe->setDescription($request->get('description'));
+        $equipe->setDateAjout($request->get('DateAjout'));
+        $equipe->setImage($imageName);
+        $em->persist($equipe);
         $em->flush();
-
-       $response = array(
-
-        'code' => 0,
-        'message' => 'update with success!',
-        'errors' => null, 
-        'result' => null
-
-    );
-    return new JsonResponse($response, Response::HTTP_CREATED);
-      
+        $response = array(
+            'code' => 0,
+            'message' => 'Partner Updated!',
+            'errors' => null,
+            'result' => null
+        );
+        return new JsonResponse($response, Response::HTTP_CREATED);
     }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
      /**
     * @Route("/getArticle/{id}", name="getArticle", methods="GET")
     */
-
     public function getArticle ($id): JsonResponse
-
-        {
-             
+        {    
         $Article= $this->repository->findOneBy(['id' => $id]);
         return new JsonResponse($Article->toArray(), Response::HTTP_OK);
-
         }
+
+
+
+
+
+
+
 
     /**
      * @Route("/Article/{id}", name="deleteArticle", methods={"DELETE"})
@@ -157,7 +268,15 @@ public function __construct(ArticleRepository $repository ,  EntityManagerInterf
         return new JsonResponse($response,200);
 
     }
-
+ 
+    /**
+     * @Route("/ImageArticle/{id}", name="ImageArticle", methods={"Get"})
+     */
+    public function deletelogo($id , ArticleRepository $repository): JsonResponse
+    {
+        $logo =  $this->repository->DeleteImage($id);
+        return new JsonResponse(['status' => 'logo deleted']);
+    }
 
 
 }

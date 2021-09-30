@@ -86,6 +86,26 @@ class EquipeController extends ApiController
     {
         $request->setMethod('PUT');
         $equipe = $this->repository->findOneBy(['id' => $id]);
+        if (!$request->files->get('file') )
+        {
+            $equipe->setNom($request->get('nom'));
+            $equipe->setPrenom($request->get('prenom'));
+            $equipe->setRole($request->get('role'));
+            $equipe->setEmail($request->get('Email'));
+            $em->persist($equipe);
+            $em->flush();
+            $response = array(
+                'code' => 0,
+                'message' => 'Partner Updated!',
+                'errors' => null,
+                'result' => null
+    
+            );
+            return new JsonResponse("hhhhh");
+
+        }
+        else 
+        {
         $uploadedImage = $request->files->get('file');
         /**
          * @var UploadedFile $image
@@ -108,6 +128,7 @@ class EquipeController extends ApiController
 
         );
         return new JsonResponse($response, Response::HTTP_CREATED);
+    }
     }
 
 

@@ -30,18 +30,16 @@ class AvisController extends ApiController
 
     
     /**
-     * 
-     * @Route("Avis/{id}", name="avis"  ,methods={"GET"} )
+     * @Route("Avis/{id}", name="avis"  ,methods={"GET"})
      */
     public function show(int $id ,AvisRepository $repository ): Response
     {
         $avis = $this->getDoctrine()
             ->getRepository(Avis::class)
             ->findAvisOfArticle($id);
-     foreach ($avis as $av) {
+            foreach ($avis as $av) {
                 $avisArray[] = $repository->transform($av);
-            }
-        
+                    }
         return $this->respond($avisArray);
        
     }

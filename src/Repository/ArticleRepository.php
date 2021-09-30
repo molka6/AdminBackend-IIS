@@ -56,6 +56,20 @@ class ArticleRepository extends ServiceEntityRepository
     }
     */
 
+    public function DeleteImage(int $PartenaireId)
+    {
+        return $this->em->createQueryBuilder()
+            ->update(Article ::class, 'p')
+            ->set('p.image', ':Null')
+            ->where('p.id= :val')
+            ->setParameter('val', $PartenaireId)
+            ->setParameter('Null', '')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
     public function transformAll()
     {
         $Articles= $this->findAll();
@@ -96,6 +110,9 @@ class ArticleRepository extends ServiceEntityRepository
         $this->em->flush();
     }
 
-  
-   
+
+
+
+
+ 
 }

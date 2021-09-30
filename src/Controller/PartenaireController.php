@@ -51,19 +51,6 @@ class PartenaireController extends ApiController
     
     public function createPartenaire( Request $request ,PartenaireRepository $partenaireRepository, EntityManagerInterface $em)
     {
-        // $request = $this->transformJsonBody($request);
-        // if (! $request) {
-        //     return $this->respondValidationError('Please provide a valid request!');
-        // }
-        // // validate the title
-        // if (! $request->get("nom")) {
-        //     return $this->respondValidationError('Please provide a nom !');
-        // }
-        // if (! $request->get("logo")) {
-        //     return $this->respondValidationError('Please provide a logo!');
-        // }
-
-        // echo($request ); 
         $Partenaire = new Partenaire();
         $uploadedImage = $request->files->get('logo');
          /**
@@ -97,6 +84,25 @@ class PartenaireController extends ApiController
     {
         $request->setMethod('PUT');
         $Partenaire = $this->repository->findOneBy(['id' => $id]);
+        if (!$request->files->get('logo') )
+        {
+
+           $Partenaire-> setNom($request->get('nom'));
+            $em->persist($Partenaire);
+            $em->flush();
+            $response = array(
+    
+                'code' => 0,
+                'message' => 'Partner Updated!',
+                'errors' => null,
+                'result' => null
+    
+            );
+            return new JsonResponse($response, Response::HTTP_CREATED);
+
+        }
+        else 
+        {
         $uploadedImage = $request->files->get('logo');
          /**
          * @var UploadedFile $image
@@ -118,7 +124,7 @@ class PartenaireController extends ApiController
 
         );
         return new JsonResponse($response, Response::HTTP_CREATED);
-
+    }
   
     }
 
